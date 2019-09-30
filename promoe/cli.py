@@ -31,6 +31,7 @@ def promoe_cli(verbose):
     else:
         logging.basicConfig(level=logging.INFO, format="\n%(levelname)s: %(message)s")
 
+
 @promoe_cli.command()
 @click.argument(
     'pdbs',
@@ -41,8 +42,11 @@ def promoe_cli(verbose):
 def protonize(pdbs):
     LOG.info('Protonize')
 
+    for pdb in pdbs:
+        print(pdb)
 
-def main(args=None):
+
+def main():
     """Console script for promoe."""
 
     print('''                 ____  ____   ___  __  __  ___  _____
@@ -51,12 +55,24 @@ def main(args=None):
                 |  __/|  _ <| |_| | |  | | |_| | |___
                 |_|   |_| \_ \\___/|_|  |_|\___/|_____|''')
 
+    LOG.info('Trying to detect MOE...')
+    if is_tool_accessible('moebatch'):
+        LOG.info('MOE successfully detected!')
+    else:
+        LOG.error('MOE could not be detected via \'moebatch\'! Aborting...')
+        sys.exit(1)
+
+    LOG.info('Trying to detect Pymol...')
+    if is_tool_accessible('pymol'):
+        LOG.info('Pymol successfully detected')
+    else:
+        LOG.error('Pymol could not be detected via \'pymol\' Aborting...')
+        sys.exit(1)
+
+    promoe_cli()
+
     # with open(WD + '/svl_scripts/test_svl.txt', 'r') as f: content = f.readlines()
     # print(content)
-
-    print(is_tool_accessible('moebatch'))
-    print(is_tool_accessible('pymol'))
-    print(is_tool_accessible('hxfghfgh'))
 
     return 0
 
