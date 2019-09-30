@@ -67,7 +67,7 @@ setup(
     package_data={
         module.__name__: walker(
             os.path.dirname(module.__file__),
-            'trained_classifiers'
+            'svl_scripts', 'pymol_scripts'
         ),
     },
     setup_requires=setup_requirements,
