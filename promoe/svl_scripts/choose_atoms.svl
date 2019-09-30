@@ -1,0 +1,37 @@
+Close[force:1];
+arg = argument[];
+// first element is the pdb file
+ReadPDB arg[1];
+
+// go through all pairs of [rName, rUID]
+// find the matching atom ids
+arg_length = length arg;
+resulting_atoms_protonize = [];
+for idx = 2, arg_length, 1 loop
+    res_name = arg([idx, 1]);
+    res_UID = arg([idx, 2]);
+
+    // find the matching residue
+    r = Residues[];
+    name_mask = rName r == res_name;
+    UID_mask = rUID r == res_UID;
+    name_UID_mask = name_mask and UID_mask;
+    all_residue_indices = igen length name_UID_mask;
+    residue_id = r[(all_residue_indices | name_UID_mask)];
+
+    // find the matching atom
+    atom_name = arg([idx, 3]);
+    all_atom_ids = oAtoms residue_id;
+    all_atom_names = aName all_atom_ids;
+    atom_mask = all_atom_names == atom_name;
+
+    resulting_atom_id = cat all_atom_ids | cat atom_mask;
+
+    if length resulting_atoms_protonize > 0 then
+        resulting_atoms_protonize[(length resulting_atoms_protonize) + 1] = resulting_atom_id;
+    endif
+endloop
+
+// protonate all supplied atoms
+Protonate3D [resulting_atoms_protonize ,Atoms[],Atoms[],[],[], [pH:7]];
+WriteTriposMOL2 tok_cat[ftail arg[1], '_selected_protonated.mol2'];

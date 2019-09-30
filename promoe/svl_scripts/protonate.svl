@@ -1,0 +1,27 @@
+Close[force:1];
+arg = argument[];
+ReadPDB arg;
+
+// documentation: file:///usr/share/apps/moe2018/html/moe/fcnref/protonate3dfcn.htm
+// available options = [
+//   mdisconnect:        flag,
+//   ele:                'mode',
+//   ele_cutoff:         num,
+//   d_in:               num,
+//   d_out:              num,
+//   T:                  num,
+//   ionC:               num,
+//   pH:                 num,
+//   vdw:                'mode',
+//   vdw_cutoff:         num,
+//   render:             flag,
+//   rulefile:           'filename',
+//   verbose:            flag
+//];
+Protonate3D [Atoms[],Atoms[],Atoms[],[],[], [pH:7]];
+
+// documentation: file:///usr/share/apps/moe2018/html/moe/fcnref/mm.htm
+// not possible to only run MM on hydrogen atoms
+// MM[gtest:1.0];
+// unfortunately it's not easy to remove specific characters from ftail args -> .pdb will stick :(
+WriteTriposMOL2 tok_cat[ftail arg, '_protonated.mol2'];

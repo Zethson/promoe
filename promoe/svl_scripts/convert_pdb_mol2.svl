@@ -1,0 +1,4 @@
+Close[force:1];
+arg = argument[];
+ReadPDB arg;
+WriteTriposMOL2 tok_cat[ftail arg, '.mol2'];
