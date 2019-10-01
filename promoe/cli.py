@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """Console script for promoe."""
+import glob
 import logging
 import os
+import shutil
+import subprocess
 import sys
 import click
 
@@ -35,7 +38,6 @@ def promoe_cli(verbose):
 @promoe_cli.command()
 @click.argument(
     'pdbs',
-    type=click.Path(exists=True),
     nargs=-1,
     required=True,
 )
@@ -43,11 +45,34 @@ def protonize(pdbs):
     LOG.info('Protonize')
 
     for pdb in pdbs:
-        print(pdb)
+        LOG.info(f'Extracting ligands and binding sites for {pdb}')
+        subprocess.run(['pymol', '-qrc', WD + '/pymol_scripts/extract_ligands.py', '--', f'{pdb}'])
+
+    cleanup()
+
+
+def cleanup():
+    LOG.info('Cleaning up files')
+
+    file_directories_extensions = [('cif_files', 'cif'),
+                                   ('pdb_files', 'pdb'),
+                                   ('mol2_files', 'mol2'),
+                                   ('charge_files', 'yaml'),
+                                   ('ligand_id_files', 'ids')]
+
+    for file_format in file_directories_extensions:
+        if not os.path.exists(file_format[0]):
+            os.mkdir(file_format[0])
+        files_to_move = glob.glob(f'./*{file_format[1]}')
+        for file in files_to_move:
+            file_name = file.split('/')[-1]
+            shutil.move(os.path.join(os.getcwd(), file_name), os.path.join(os.getcwd() + f'/{file_format[0]}', file_name))
 
 
 def main():
-    """Console script for promoe."""
+    """
+    Main entry point for Promoe
+    """
 
     print('''                 ____  ____   ___  __  __  ___  _____
                 |  _ \|  _ \ / _ \|  \/  |/ _ \| ____|
@@ -70,9 +95,6 @@ def main():
         sys.exit(1)
 
     promoe_cli()
-
-    # with open(WD + '/svl_scripts/test_svl.txt', 'r') as f: content = f.readlines()
-    # print(content)
 
     return 0
 

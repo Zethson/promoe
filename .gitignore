@@ -103,3 +103,18 @@ ENV/
 
 # idea
 .idea
+
+.vscode/
+
+*.cif
+*.pdb
+*.mol2
+*_ids
+*.yaml
+*_distances
+
+pdb_files
+mol2_files
+cif_files
+ligand_id_files
+charge_files
