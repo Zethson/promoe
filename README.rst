@@ -13,14 +13,12 @@ promoe
         :target: https://promoe.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
 .. image:: https://pyup.io/repos/github/zethson/promoe/shield.svg
      :target: https://pyup.io/repos/github/zethson/promoe/
      :alt: Updates
 
 
-
-Protonize selected atoms with the use of moe and pymol
+Protonize selected atoms with the use of MOE and Pymol.
 
 
 * Free software: GNU General Public License v3
@@ -31,11 +29,3 @@ Features
 --------
 
 * TODO
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
