@@ -2,15 +2,17 @@
 
 """Console script for promoe."""
 import glob
+import itertools
 import logging
 import os
-import shutil
 import subprocess
 import sys
 import click
 
+from promoe.cleanup import cleanup
 from promoe.util.command_util import is_tool_accessible
-from shlex import quote
+
+from promoe.util.list_util import group
 
 WD = os.path.dirname(__file__)
 
@@ -37,51 +39,106 @@ def promoe_cli(verbose):
 
 
 @promoe_cli.command()
-@click.argument(
-    'pdbs',
-    nargs=-1,
+@click.option(
+    '--pdbs',
+    multiple=True,
     required=True,
 )
 def protonize(pdbs):
     LOG.info('Protonize')
 
-    pdbs = pdbs[1:]
     # extract ligands and binding sites
     for pdb in pdbs:
         LOG.info(f'Extracting ligands and binding sites for {pdb}')
-        subprocess.run(['pymol', '-qrc', WD + '/pymol_scripts/extract_ligands.py', '--', f'{pdb}'])
+        subprocess.run(['pymol', '-qrc', f'{WD}/pymol_scripts/extract_ligands.py', '--', f'{pdb}'])
 
     # extract all alternative locations of atoms
     pdb_files = glob.glob('*.pdb')
     for pdb in pdb_files:
         LOG.info(f'Extracting alternative locations for {pdb}')
-        subprocess.run(['python', WD + '/pymol_scripts/altloc_extraction.py', '--pdb', pdb])
+        subprocess.run(['python', f'{WD}/pymol_scripts/altloc_extraction.py', '--pdb', pdb])
+
+    # protonizing
+    pdb_files = glob.glob('*.pdb')
+    for pdb in pdb_files:
+        LOG.info(f'Protonizing {pdb}')
+        subprocess.run(['bash', f'{WD}/svl_scripts/run_protonate.sh', f'{WD}/svl_scripts/protonate.svl', pdb])
 
     # convert all pdb files to mol2
     pdb_files = glob.glob('*.pdb')
     for pdb in pdb_files:
         LOG.info(f'Converting pdb file to mol2 for {pdb}')
-        subprocess.run(['bash', WD + '/svl_scripts/run_pdb_convertion.sh', WD + '/svl_scripts/convert_pdb_mol2.svl', pdb])
+        subprocess.run(
+            ['bash', f'{WD}/svl_scripts/run_pdb_convertion.sh', f'{WD}/svl_scripts/convert_pdb_mol2.svl', pdb])
+
+    # extract charges
+    mol_2_files = glob.glob('*.mol2')
+    for mol2 in mol_2_files:
+        LOG.info(f'Extracting charges for {mol2}')
+        subprocess.run(['python', f'{WD}/pymol_scripts/extract_charges.py', '--mol2', mol2])
 
     cleanup()
 
 
-def cleanup():
-    LOG.info('Cleaning up files')
+@promoe_cli.command()
+@click.option(
+    '--pdb',
+    nargs=1,
+    required=True
+)
+@click.option(
+    '--atoms',
+    multiple=True,
+    required=True
+)
+@click.option(
+    '--chain',
+    required=False
+)
+def protonize_selected(pdb, atoms, chain='all'):
+    # promoe protonize-selected --pdb /home/xb/PycharmProjects/promoe/pdb_files/4agl_full.pdb --atoms '[\'GLN\', \'144\', \'N\'], [\'LEU\', \'145\', \'N\']' --chain A
+    result = list(group(atoms, ']'))
+    atoms = list(itertools.chain.from_iterable(result))[0]
 
-    file_directories_extensions = [('cif_files', 'cif'),
-                                   ('pdb_files', 'pdb'),
-                                   ('mol2_files', 'mol2'),
-                                   ('charge_files', 'yaml'),
-                                   ('ligand_id_files', 'ids')]
+    if chain is 'all':
+        LOG.info(f'Protonizing selected atoms for {pdb}')
+        subprocess.run(['bash',
+                        f'{WD}/svl_scripts/run_choose_atoms.sh',
+                        f'{WD}/svl_scripts/choose_atoms.svl',
+                        pdb,
+                        atoms])
+    else:  # chain A or B
+        LOG.info(f'Extracting chain {chain} for {pdb}')
+        subprocess.run(['pymol', '-qrc', f'{WD}/pymol_scripts/extract_chains_only.py', '--', pdb, chain])
+        pdb_chain_file = "%s_chain_%s.pdb" % (pdb.split('/')[-1][:-4], chain)
+        LOG.info(f'Protonizing selected atoms of {chain} for {pdb}')
+        subprocess.run(['bash',
+                        f'{WD}/svl_scripts/run_choose_atoms.sh',
+                        f'{WD}/svl_scripts/choose_atoms.svl',
+                        pdb_chain_file,
+                        atoms])
 
-    for file_format in file_directories_extensions:
-        if not os.path.exists(file_format[0]):
-            os.mkdir(file_format[0])
-        files_to_move = glob.glob(f'./*{file_format[1]}')
-        for file in files_to_move:
-            file_name = file.split('/')[-1]
-            shutil.move(os.path.join(os.getcwd(), file_name), os.path.join(os.getcwd() + f'/{file_format[0]}', file_name))
+    cleanup()
+
+@promoe_cli.command()
+@click.option(
+    '--mol2',
+    required=True
+)
+@click.option(
+    '--keep_hydrogens/--remove_hydrogens',
+    default=False
+)
+@click.option(
+    '--distance',
+    default=4
+)
+def clean_hydrogens(mol2, keep_hydrogens, distance):
+    if not keep_hydrogens:
+        subprocess.run(['pymol', '-qrc', f'{WD}/pymol_scripts/extract_distances.py', '--', mol2])
+    # TODO THIS IS NOT YET FINISHED
+
+
 
 
 def main():
