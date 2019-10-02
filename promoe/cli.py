@@ -10,6 +10,7 @@ import sys
 import click
 
 from promoe.util.command_util import is_tool_accessible
+from shlex import quote
 
 WD = os.path.dirname(__file__)
 
@@ -44,9 +45,23 @@ def promoe_cli(verbose):
 def protonize(pdbs):
     LOG.info('Protonize')
 
+    pdbs = pdbs[1:]
+    # extract ligands and binding sites
     for pdb in pdbs:
         LOG.info(f'Extracting ligands and binding sites for {pdb}')
         subprocess.run(['pymol', '-qrc', WD + '/pymol_scripts/extract_ligands.py', '--', f'{pdb}'])
+
+    # extract all alternative locations of atoms
+    pdb_files = glob.glob('*.pdb')
+    for pdb in pdb_files:
+        LOG.info(f'Extracting alternative locations for {pdb}')
+        subprocess.run(['python', WD + '/pymol_scripts/altloc_extraction.py', '--pdb', pdb])
+
+    # convert all pdb files to mol2
+    pdb_files = glob.glob('*.pdb')
+    for pdb in pdb_files:
+        LOG.info(f'Converting pdb file to mol2 for {pdb}')
+        subprocess.run(['bash', WD + '/svl_scripts/run_pdb_convertion.sh', WD + '/svl_scripts/convert_pdb_mol2.svl', pdb])
 
     cleanup()
 
