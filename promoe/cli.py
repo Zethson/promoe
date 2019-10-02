@@ -50,32 +50,48 @@ def protonize(pdbs):
     # extract ligands and binding sites
     for pdb in pdbs:
         LOG.info(f'Extracting ligands and binding sites for {pdb}')
-        subprocess.run(['pymol', '-qrc', f'{WD}/pymol_scripts/extract_ligands.py', '--', f'{pdb}'])
+        subprocess.run(['pymol',
+                        '-qrc',
+                        f'{WD}/pymol_scripts/extract_ligands.py',
+                        '--',
+                        f'{pdb}'])
 
     # extract all alternative locations of atoms
     pdb_files = glob.glob('*.pdb')
     for pdb in pdb_files:
         LOG.info(f'Extracting alternative locations for {pdb}')
-        subprocess.run(['python', f'{WD}/pymol_scripts/altloc_extraction.py', '--pdb', pdb])
+        subprocess.run(['python',
+                        f'{WD}/pymol_scripts/altloc_extraction.py',
+                        '--pdb',
+                        pdb])
 
     # protonizing
     pdb_files = glob.glob('*.pdb')
     for pdb in pdb_files:
         LOG.info(f'Protonizing {pdb}')
-        subprocess.run(['bash', f'{WD}/svl_scripts/run_protonate.sh', f'{WD}/svl_scripts/protonate.svl', pdb])
+        subprocess.run(['bash',
+                        f'{WD}/svl_scripts/run_protonate.sh',
+                        f'{WD}/svl_scripts/protonate.svl',
+                        pdb])
 
     # convert all pdb files to mol2
     pdb_files = glob.glob('*.pdb')
     for pdb in pdb_files:
         LOG.info(f'Converting pdb file to mol2 for {pdb}')
         subprocess.run(
-            ['bash', f'{WD}/svl_scripts/run_pdb_convertion.sh', f'{WD}/svl_scripts/convert_pdb_mol2.svl', pdb])
+            ['bash',
+             f'{WD}/svl_scripts/run_pdb_convertion.sh',
+             f'{WD}/svl_scripts/convert_pdb_mol2.svl',
+             pdb])
 
     # extract charges
     mol_2_files = glob.glob('*.mol2')
     for mol2 in mol_2_files:
         LOG.info(f'Extracting charges for {mol2}')
-        subprocess.run(['python', f'{WD}/pymol_scripts/extract_charges.py', '--mol2', mol2])
+        subprocess.run(['python',
+                        f'{WD}/pymol_scripts/extract_charges.py',
+                        '--mol2',
+                        mol2])
 
     cleanup()
 
