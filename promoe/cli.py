@@ -44,7 +44,15 @@ def promoe_cli(verbose):
     multiple=True,
     required=True,
 )
-def protonize(pdbs):
+@click.option(
+    '--keep_hydrogens/--remove_hydrogens',
+    default=True
+)
+@click.option(
+    '--distance',
+    default=4
+)
+def protonize(pdbs, distance, keep_hydrogens):
     LOG.info('Protonize')
 
     # extract ligands and binding sites
@@ -93,6 +101,13 @@ def protonize(pdbs):
                         '--mol2',
                         mol2])
 
+    # remove hydrogens, if specified by the user
+    if not keep_hydrogens:
+        protonated_mol_2_files = glob.glob('*binding_site*protonated.mol2')
+        for mol2 in protonated_mol_2_files:
+            LOG.info(f'Removing hydrogens for {mol2}')
+            internal_clean_hydrogens(mol2, distance, False)
+
     cleanup()
 
 
@@ -136,25 +151,54 @@ def protonize_selected(pdb, atoms, chain='all'):
 
     cleanup()
 
+
 @promoe_cli.command()
 @click.option(
     '--mol2',
     required=True
 )
 @click.option(
-    '--keep_hydrogens/--remove_hydrogens',
-    default=False
-)
-@click.option(
     '--distance',
     default=4
 )
-def clean_hydrogens(mol2, keep_hydrogens, distance):
-    if not keep_hydrogens:
-        subprocess.run(['pymol', '-qrc', f'{WD}/pymol_scripts/extract_distances.py', '--', mol2])
-    # TODO THIS IS NOT YET FINISHED
+def clean_hydrogens(mol2, distance, remove_all=False):
+    subprocess.run(['pymol',
+                    '-qrc',
+                    f'{WD}/pymol_scripts/extract_distances.py',
+                    '--',
+                    mol2,
+                    str(distance)])
+
+    mol2_id = mol2.split('.')[0].split('/')[-1]
+
+    subprocess.run(['pymol',
+                    '-qrc',
+                    f'{WD}/pymol_scripts/hydrogen_verification.py',
+                    '--',
+                    mol2,
+                    mol2_id + '_distances',
+                    str(remove_all)])
+
+    cleanup()
 
 
+def internal_clean_hydrogens(mol2, distance, remove_all=False):
+    subprocess.run(['pymol',
+                    '-qrc',
+                    f'{WD}/pymol_scripts/extract_distances.py',
+                    '--',
+                    mol2,
+                    str(distance)])
+
+    mol2_id = mol2.split('.')[0].split('/')[-1]
+
+    subprocess.run(['pymol',
+                    '-qrc',
+                    f'{WD}/pymol_scripts/hydrogen_verification.py',
+                    '--',
+                    mol2,
+                    mol2_id + '_distances',
+                    str(remove_all)])
 
 
 def main():

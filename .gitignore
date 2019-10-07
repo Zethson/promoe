@@ -118,3 +118,4 @@ mol2_files
 cif_files
 ligand_id_files
 charge_files
+distances_files
