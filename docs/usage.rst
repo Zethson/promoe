@@ -26,9 +26,9 @@ Options:
   --help         Show this message and exit.
 
 | Commands:
-|   protonize
-|   protonize-selected
-|   clean-hydrogens
+|   **protonize**
+|   **protonize-selected**
+|   **clean-hydrogens**
 
 The help menus of the respective commands can be requested via::
 
@@ -60,6 +60,13 @@ Options:
 .. image:: ../images/protonize.png
     :alt: protonize overview
 
+| The results include several folders separating the generated results.
+| The pdb, as well as mol2 files for the full protein, the binding sites, as well as the ligands can be found in the pdb_files and mol2_files folders.
+| Additionally, the protonated binding sites are contained in the mol2 folder.
+| All distances from the atoms to the ligand that are below the specified distance are in the distances_files folder.
+| Moreover, the calculated charges for all residues are contained in the charge_files folder.
 
+promoe protonize_selected
+-------------------------
 
-
+asd
