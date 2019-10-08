@@ -24,8 +24,15 @@ Protonize selected atoms with the use of MOE and Pymol.
 * Free software: GNU General Public License v3
 * Documentation: https://promoe.readthedocs.io.
 
+Overview
+--------
+
+.. image:: images/overview.png
+    :alt: overview of promoe
 
 Features
 --------
 
-* TODO
+* Protonize the binding site of a pdb id automatically
+* Remove water atoms that are unable to interact with the ligand after protonization
+* Extract charges for residues

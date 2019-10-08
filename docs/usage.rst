@@ -38,4 +38,26 @@ The help menus of the respective commands can be requested via::
 promoe protonize
 ----------------
 
-asd
+Help menu::
+
+                |  _ \|  _ \ / _ \|  \/  |/ _ \| ____|
+                | |_) | |_) | | | | |\/| | | | |  _|
+                |  __/|  _ <| |_| | |  | | |_| | |___
+                |_|   |_| \_ \___/|_|  |_|\___/|_____|
+
+Usage: promoe protonize [OPTIONS]
+
+Options:
+  --pdbs TEXT                       pdb identifier to protonize -> binding site will be extracted automatically [required]
+  --keep_hydrogens                  Specify if all hydrogens after protonization should be kept.
+  --remove_hydrogens                Specify if hydrogens that are **not** within a specific distance should be deleted.
+  --distance INTEGER                The maximal distance of the ligand to the surrounding water atoms after protonization, that should be kept. Default is 4. Hence, all water atoms within distance 4 to the ligand are not removed!
+  --help                            Show this message and exit
+
+| Multiple pdbs can be specified by repeating the --pdb parameter.
+| The command 'protonize' will fetch the pdb file for the pdb id and extract the binding site, as well as the ligand automatically.
+|
+
+
+
+
