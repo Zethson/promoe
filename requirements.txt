@@ -1,4 +1,4 @@
 click==7.0
 biopython
-tqdm
+tqdm==4.36.1
 pyyaml
