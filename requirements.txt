@@ -1,4 +1,4 @@
 click==7.0
-biopython
+biopython==1.74
 tqdm
 pyyaml
