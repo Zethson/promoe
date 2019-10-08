@@ -36,3 +36,5 @@ Features
 * Protonize the binding site of a pdb id automatically
 * Remove water atoms that are unable to interact with the ligand after protonization
 * Extract charges for residues
+* Extract all ligand IDs
+* Extract all alternative locations

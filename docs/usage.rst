@@ -55,8 +55,10 @@ Options:
   --help                            Show this message and exit
 
 | Multiple pdbs can be specified by repeating the --pdb parameter.
-| The command 'protonize' will fetch the pdb file for the pdb id and extract the binding site, as well as the ligand automatically.
-|
+| The workflow is as follows:
+
+.. image:: ../images/protonize.png
+    :alt: protonize overview
 
 
 
