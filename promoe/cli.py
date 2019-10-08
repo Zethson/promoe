@@ -126,8 +126,15 @@ def protonize(pdbs, distance, keep_hydrogens):
     '--chain',
     required=False
 )
-def protonize_selected(pdb, atoms, chain='all'):
-    # promoe protonize-selected --pdb /home/xb/PycharmProjects/promoe/pdb_files/4agl_full.pdb --atoms '[\'GLN\', \'144\', \'N\'], [\'LEU\', \'145\', \'N\']' --chain A
+@click.option(
+    '--keep_hydrogens/--remove_hydrogens',
+    default=True
+)
+@click.option(
+    '--distance',
+    default=4
+)
+def protonize_selected(pdb, atoms, distance, keep_hydrogens, chain='all'):
     result = list(group(atoms, ']'))
     atoms = list(itertools.chain.from_iterable(result))[0]
 
@@ -148,6 +155,13 @@ def protonize_selected(pdb, atoms, chain='all'):
                         f'{WD}/svl_scripts/choose_atoms.svl',
                         pdb_chain_file,
                         atoms])
+
+    # remove hydrogens, if specified by the user
+    if not keep_hydrogens:
+        protonated_mol_2_files = glob.glob('*binding_site*protonated.mol2')
+        for mol2 in protonated_mol_2_files:
+            LOG.info(f'Removing hydrogens for {mol2}')
+            internal_clean_hydrogens(mol2, distance, False)
 
     cleanup()
 
