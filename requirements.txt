@@ -1,4 +1,4 @@
 click==7.0
 biopython
 tqdm
-pyyaml
+pyyaml==5.1.2
