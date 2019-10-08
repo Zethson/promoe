@@ -1,9 +1,16 @@
-.. highlight:: shell
-
 ============
 Installation
 ============
 
+Requirements
+------------
+
+promoe has several requirements, that all have to be met:
+
+1. Python 3.7+
+2. Pymol most recent python 2 version (Pymol versions supporting python 3+ are not tested!) => 'pymol' has to be available in your path
+3. Pymol-psico (https://pymolwiki.org/index.php/Psico)
+4. The most recent MOE version => 'moebatch' has to be available in your path
 
 Stable release
 --------------
@@ -14,7 +21,7 @@ To install promoe, run this command in your terminal:
 
     $ pip install promoe
 
-This is the preferred method to install promoe, as it will always install the most recent stable release.
+This is the preferred method to install promoe, as it will always install the most recent stable release. All required dependencies, except for the ones mentioned above will automatically be included.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
