@@ -99,4 +99,25 @@ The generated results are very similar to the ones mentioned for protonize
 promoe clean-hydrogens
 ----------------------
 
+Help menu::
+
+                 ____  ____   ___  __  __  ___  _____
+                |  _ \|  _ \ / _ \|  \/  |/ _ \| ____|
+                | |_) | |_) | | | | |\/| | | | |  _|
+                |  __/|  _ <| |_| | |  | | |_| | |___
+                |_|   |_| \_ \___/|_|  |_|\___/|_____|
+
+Usage: promoe clean-hydrogens [OPTIONS]
+
+Options:
+  --mol2 TEXT         Path to the mol2 file[required]
+  --distance INTEGER  The maximal distance of the ligand to the surrounding water atoms after protonization, that should be kept. Default is 4. Hence, all water atoms within distance 4 to the ligand are not removed!
+  --help              Show this message and exit.
+
+.. image:: ../images/clean_hydrogens.png
+    :alt: clean-hydrogens overview
+
+clean-hydrogens only generates distance files and the modified mol2 file.
+
+
 
