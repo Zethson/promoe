@@ -12,6 +12,10 @@ LOG.setLevel(logging.INFO)
 
 
 def cleanup():
+    """
+    Creates folders for all file types and move the respective files into them
+
+    """
     LOG.info('Cleaning up files')
 
     file_directories_extensions = [('cif_files', 'cif'),

@@ -18,7 +18,8 @@ if not 'binding_site' in pdb_file:
 
 if not 'protonated' in pdb_file:
     LOG.warn('Trying to extract distances from a possibly non protonated pdb file.'
-             ' This is not intended and you likely will not receive any distances.')
+             'This is not intended and you likely will not receive any distances. The reason is that there likely '
+             'won\' be any hydrogens.')
 
 LOG.info('Extracting distances for %s' % pdb_file)
 

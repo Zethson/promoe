@@ -14,6 +14,10 @@ LOG.setLevel(logging.INFO)
 
 all_argv = argv[1:]
 
+"""
+Script which uses pymol to extract all ligands and their respective IDs.
+"""
+
 for pdb_id in all_argv:
     cmd.reinitialize()
     cmd.fetch(pdb_id)

@@ -10,8 +10,9 @@ LOG = logging.getLogger("Extract Chains")
 LOG.addHandler(console)
 LOG.setLevel(logging.INFO)
 
-all_argv = argv[1:]
+# This script extracts the selected chain only and saves it as a pdb.
 
+all_argv = argv[1:]
 pdb_id = all_argv[0]
 chain = all_argv[1]
 

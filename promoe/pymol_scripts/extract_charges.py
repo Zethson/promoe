@@ -40,6 +40,11 @@ class Atom:
               help='Path to mol2 file',
               required=True)
 def extract_charges(mol2):
+    """
+    Extracts the charges of all residues and also sums them up for the total charge.
+
+    :param mol2: Path to the mol2 file
+    """
     all_residues = parse_mol2(mol2)
     all_charges_per_residue = list(map(lambda residue: sum(map(lambda atom: atom.charge, residue.atoms)), all_residues))
     total_charge = sum(all_charges_per_residue)
@@ -48,6 +53,12 @@ def extract_charges(mol2):
 
 
 def parse_mol2(mol2):
+    """
+    Parses a mol2 file for the required downstream information.
+
+    :param mol2: Path to the mol2 file
+    :return: list of Residues
+    """
     with open(mol2, 'r') as f:
         lines = f.readlines()
         try:
@@ -91,6 +102,14 @@ def parse_mol2(mol2):
 
 
 def write_charges(all_residues, all_charges_per_residue, total_charge, mol2):
+    """
+    Writes the charges file. Name of the output file will be determined by the name of the input mol2 file.
+
+    :param all_residues: List of Residues
+    :param all_charges_per_residue: List of charges per Residue
+    :param total_charge: Integer number of total charge
+    :param mol2: Path to the original mol2 file
+    """
     # solely all subst_names
     all_residue_subst_name = list(map(lambda residue: residue.atoms[0].subst_name, all_residues))
     # solely float numbers of charges (as strings)
