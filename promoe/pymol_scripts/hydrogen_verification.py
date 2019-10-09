@@ -16,7 +16,6 @@ LOG.setLevel(logging.INFO)
 # mol 2 file format specifications taken from
 # http://chemyang.ccnu.edu.cn/ccb/server/AIMMS/mol2.pdf
 
-
 class Distance:
     def __init__(self,
                  source_chain,
@@ -32,6 +31,12 @@ class Distance:
 
 
 def parse_distances(distances_file):
+    """
+    Parses all distances and returns an internal representation for the distances.
+
+    :param distances_file: Path to the distances file.
+    :return: List of Distances
+    """
     with open(distances_file, 'r') as f: content = f.readlines()
 
     all_distances = []
@@ -50,6 +55,13 @@ def parse_distances(distances_file):
 
 
 def remove_hydrogens(mol2_file, atoms_to_keep, remove_all):
+    """
+    Removes water from the mol2 file.
+
+    :param mol2_file: Path to the mol2 file.
+    :param atoms_to_keep: List of atomIDs that are within a specific distance to the ligand and should NOT be deleted.
+    :param remove_all: If all water atoms should be removed.
+    """
     with open(mol2_file, 'r') as f:
         content = f.readlines()
     # first strip everything until @<TRIPOS>ATOM
@@ -94,6 +106,13 @@ def remove_hydrogens(mol2_file, atoms_to_keep, remove_all):
 
 
 def remove_selected_hydrogens(mol2, distances, remove_all):
+    """
+    Entry point for this script. Removes all selected water.
+
+    :param mol2: Path to the mol2 file.
+    :param distances: Path to the distances file
+    :param remove_all: Boolean whether or not to remove all water
+    """
     all_distances = parse_distances(distances)
     atoms_to_keep = list(
         itertools.chain(

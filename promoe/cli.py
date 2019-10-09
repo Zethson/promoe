@@ -53,6 +53,15 @@ def promoe_cli(verbose):
     default=4
 )
 def protonize(pdbs, distance, keep_hydrogens):
+    """
+    Entry point for the protonize command. Starts the protonize pipeline. Extracts ligands and binding sites,
+    their respective altlocs, protonizes them, converts the pdb files to mol2, extracts charges and removes hydrogens
+    if specified.
+
+    :param pdbs: PDBID
+    :param distance: Integer which specifies the maximal distance between ligand and water
+    :param keep_hydrogens: Boolean which specifies whether or not to keep water
+    """
     LOG.info('Protonize')
 
     # extract ligands and binding sites
@@ -135,6 +144,17 @@ def protonize(pdbs, distance, keep_hydrogens):
     default=4
 )
 def protonize_selected(pdb, atoms, distance, keep_hydrogens, chain='all'):
+    """
+    Entry point for the protonize selected command.
+    Starts the protonize_selected pipeline. Extracts the atomIDs, the specified chain and protonizes.
+
+    :param pdb: Path to a pdb file
+    :param atoms: List of atoms in the following format: '[\'GLN\', \'144\', \'N\'], [\'LEU\', \'145\', \'N\']' => Only those atoms will be protonized!
+    :param distance: Integer which specifies the maximal distance between ligand and water
+    :param keep_hydrogens: Boolean which specifies whether or not to keep water
+    :param chain: String => usually A, B or all
+    :return:
+    """
     result = list(group(atoms, ']'))
     atoms = list(itertools.chain.from_iterable(result))[0]
 
@@ -176,6 +196,13 @@ def protonize_selected(pdb, atoms, distance, keep_hydrogens, chain='all'):
     default=4
 )
 def clean_hydrogens(mol2, distance, remove_all=False):
+    """
+    Removes all any water that is not within a specified distance to the ligand.
+
+    :param mol2: Path to the mol2 file containing a binding site.
+    :param distance: Integer which specifies the maximal distance between ligand and water
+    :param remove_all: Whether or not to remove all water.
+    """
     # extract the distances from the surrounding water atoms to the ligand
     subprocess.run(['pymol',
                     '-qrc',
@@ -199,6 +226,9 @@ def clean_hydrogens(mol2, distance, remove_all=False):
 
 
 def internal_clean_hydrogens(mol2, distance, remove_all=False):
+    """
+    Likely redundant. Just an internal copy without click of the stuff above.
+    """
     # extract the distances from the surrounding water atoms to the ligand
 
     subprocess.run(['pymol',

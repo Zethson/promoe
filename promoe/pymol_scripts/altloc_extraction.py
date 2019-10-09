@@ -12,16 +12,20 @@ LOG.addHandler(console)
 LOG.setLevel(logging.INFO)
 
 
-# Implements Select Interface of PDB
-# accepts all atoms, which are in altloc A
 class NotDisorderedA(Select):
+    """
+    Implements select interface of pymol.
+    Accepts all atoms, which are in altloc A
+    """
     def accept_atom(self, atom):
         return not atom.is_disordered() or atom.get_altloc() == 'A'
 
 
-# Implements Select Interface of PDB
-# accepts all atoms, which are in altloc B
 class NotDisorderedB(Select):
+    """
+    Implements select interface of pymol
+    Accepts all atoms, which are in altloc B
+    """
     def accept_atom(self, atom):
         return not atom.is_disordered() or atom.get_altloc() == 'B'
 
@@ -31,6 +35,13 @@ class NotDisorderedB(Select):
               help='path to pdb file',
               required=True)
 def extract_altlocs(pdb):
+    """
+    Extracts the alternative locations of atoms in a pdb file and saves it.
+    Alternative locations are determined via the disordered property of the atoms in the PDB file.
+    Sideeffect: the input PDB file is deleted! It is replaced by the altloc pdb(s).
+
+    :param pdb: path to the pdb file
+    """
     parser = PDBParser()
     pdb_id = pdb.split('_')[0]
     structure = parser.get_structure(pdb_id, pdb)
