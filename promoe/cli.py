@@ -176,6 +176,7 @@ def protonize_selected(pdb, atoms, distance, keep_hydrogens, chain='all'):
     default=4
 )
 def clean_hydrogens(mol2, distance, remove_all=False):
+    # extract the distances from the surrounding water atoms to the ligand
     subprocess.run(['pymol',
                     '-qrc',
                     f'{WD}/pymol_scripts/extract_distances.py',
@@ -185,6 +186,7 @@ def clean_hydrogens(mol2, distance, remove_all=False):
 
     mol2_id = mol2.split('.')[0].split('/')[-1]
 
+    # remove the water atoms that are too far
     subprocess.run(['pymol',
                     '-qrc',
                     f'{WD}/pymol_scripts/hydrogen_verification.py',
@@ -197,6 +199,8 @@ def clean_hydrogens(mol2, distance, remove_all=False):
 
 
 def internal_clean_hydrogens(mol2, distance, remove_all=False):
+    # extract the distances from the surrounding water atoms to the ligand
+
     subprocess.run(['pymol',
                     '-qrc',
                     f'{WD}/pymol_scripts/extract_distances.py',
@@ -206,6 +210,7 @@ def internal_clean_hydrogens(mol2, distance, remove_all=False):
 
     mol2_id = mol2.split('.')[0].split('/')[-1]
 
+    # remove the water atoms that are too far
     subprocess.run(['pymol',
                     '-qrc',
                     f'{WD}/pymol_scripts/hydrogen_verification.py',
