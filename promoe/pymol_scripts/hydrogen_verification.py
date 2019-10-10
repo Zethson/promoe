@@ -85,13 +85,10 @@ def remove_hydrogens(mol2_file, atoms_to_keep, remove_all):
         current_atom_subst_name = str.strip(split[7])
 
         if remove_all:
-            if (current_atom_atom_type == 'H' or current_atom_atom_type == 'O' or current_atom_atom_type == 'O.3') \
-                    and 'HOH' in current_atom_subst_name:
+            if current_atom_atom_type == 'H':
                 atoms_to_delete.append(current_atom_atom_id)
         else:
-            if (current_atom_atom_type == 'H' or current_atom_atom_type == 'O' or current_atom_atom_type == 'O.3') \
-                    and 'HOH' in current_atom_subst_name \
-                    and current_atom_atom_id not in atoms_to_keep:
+            if current_atom_atom_type == 'H' and current_atom_atom_id not in atoms_to_keep:
                 atoms_to_delete.append(current_atom_atom_id)
 
     # delete the atoms with the use of pymol

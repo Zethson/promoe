@@ -13,8 +13,8 @@ promoe
         :target: https://promoe.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/zethson/promoe/shield.svg
-     :target: https://pyup.io/repos/github/zethson/promoe/
+.. image:: https://pyup.io/repos/github/Zethson/promoe/shield.svg
+     :target: https://pyup.io/repos/github/Zethson/promoe/
      :alt: Updates
 
 
